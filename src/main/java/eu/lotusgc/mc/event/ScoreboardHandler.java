@@ -68,13 +68,15 @@ public class ScoreboardHandler implements Listener{
 		}else {
 			o.setDisplayName(sbPrefix);
 			//playerinfo
-			o.getScore(lc.sendMessageToFormat(player, "event.scoreboard.userid")).setScore(8);
-			o.getScore("§7» §a" + lc.getPlayerData(player, Playerdata.LotusChangeID)).setScore(7);
-			o.getScore("§7Clan:").setScore(6);
-			o.getScore("§7» §a" + lc.getPlayerData(player, Playerdata.Clan)).setScore(5);
+			o.getScore(lc.sendMessageToFormat(player, "event.scoreboard.userid")).setScore(0);
+			o.getScore("§7» §a" + lc.getPlayerData(player, Playerdata.LotusChangeID)).setScore(9);
+			o.getScore("§7Clan:").setScore(8);
+			o.getScore("§7» §a" + lc.getPlayerData(player, Playerdata.Clan)).setScore(7);
+			o.getScore("§4§b").setScore(6);
 			//role
-			o.getScore(lc.sendMessageToFormat(player, "event.scoreboard.role")).setScore(4);
-			o.getScore(retGroup(player)).setScore(3);
+			o.getScore(lc.sendMessageToFormat(player, "event.scoreboard.role")).setScore(5);
+			o.getScore(retGroup(player)).setScore(4);
+			o.getScore("§3§a").setScore(3);
 			//money
 			o.getScore(lc.sendMessageToFormat(player, "event.scoreboard.money")).setScore(2);
 			o.getScore("§7» Pocket: §a" + lc.getPlayerData(player, Playerdata.MoneyPocket) + " §6Loti").setScore(1);
