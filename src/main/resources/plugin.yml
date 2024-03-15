@@ -1,0 +1,11 @@
+version: 1.0.0-ALPHA
+author: ChrisWille2856
+name: LotusGamingSystem
+main: eu.lotusgc.mc.main.Main
+api-version: 1.20
+
+commands:
+    build:
+    spawn:
+    spawn-admin:
+    

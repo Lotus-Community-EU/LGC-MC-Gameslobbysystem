@@ -7,6 +7,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 
+import eu.lotusgc.mc.command.BuildCMD;
+import eu.lotusgc.mc.command.SpawnSystem;
+import eu.lotusgc.mc.event.EffectMoveEvent;
+import eu.lotusgc.mc.event.EventBlocker;
+import eu.lotusgc.mc.event.InventorySetterHandling;
+import eu.lotusgc.mc.event.JoinLeaveEvents;
+import eu.lotusgc.mc.event.ScoreboardHandler;
 import eu.lotusgc.mc.misc.LotusController;
 import eu.lotusgc.mc.misc.MySQL;
 import eu.lotusgc.mc.misc.SyncServerdata;
@@ -45,8 +52,18 @@ public class LotusManager {
 	public void init() {
 		long timestamp = System.currentTimeMillis();
 		
+		Main.main.getCommand("build").setExecutor(new BuildCMD());
+		Main.main.getCommand("spawn").setExecutor(new SpawnSystem());
+		Main.main.getCommand("spawn-admin").setExecutor(new SpawnSystem());
 		
 		PluginManager pM = Bukkit.getPluginManager();
+		pM.registerEvents(new BuildCMD(), Main.main);
+		pM.registerEvents(new SpawnSystem(), Main.main);
+		pM.registerEvents(new ScoreboardHandler(), Main.main);
+		pM.registerEvents(new EffectMoveEvent(), Main.main);
+		pM.registerEvents(new JoinLeaveEvents(), Main.main);
+		pM.registerEvents(new EventBlocker(), Main.main);
+		pM.registerEvents(new InventorySetterHandling(), Main.main);
 		
 		Bukkit.getConsoleSender().sendMessage("§aInitialisation took §6" + (System.currentTimeMillis() - timestamp) + "§ams.");
 	}
@@ -61,6 +78,8 @@ public class LotusManager {
 		lc.loadServerIDName();
 		
 		SyncServerdata.startScheduler();
+		new ScoreboardHandler().startScheduler(0, 50, 20);
+		ScoreboardHandler.initRoles();
 		
 		Main.luckPerms = (LuckPerms) Bukkit.getServer().getServicesManager().load(LuckPerms.class);
 		
