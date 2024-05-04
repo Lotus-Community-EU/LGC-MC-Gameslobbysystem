@@ -12,6 +12,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import eu.lotusgc.mc.misc.HotbarItem;
+import eu.lotusgc.mc.misc.LotusController;
 import eu.lotusgc.mc.misc.MySQL;
 
 public class JoinLeaveEvents implements Listener{
@@ -24,6 +26,7 @@ public class JoinLeaveEvents implements Listener{
 		player.setHealth(20.0);
 		player.setFoodLevel(20);
 		player.setWalkSpeed((float) 0.2);
+		new HotbarItem().setHotbarItems(player);
 		
 		updateOnlineStatus(player.getUniqueId(), true);
 	}
@@ -37,9 +40,18 @@ public class JoinLeaveEvents implements Listener{
 	
 	private void updateOnlineStatus(UUID uuid, boolean status) {
 		try {
-			PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE mc_users SET isOnline = ? WHERE mcuuid = ?");
-			ps.setBoolean(1, status);
-			ps.setString(2, uuid.toString());
+			PreparedStatement ps;
+			if(status) {
+				LotusController lc = new LotusController();
+				ps = MySQL.getConnection().prepareStatement("UPDATE mc_users SET isOnline = ?, currentLastServer = ? WHERE mcuuid = ?");
+				ps.setBoolean(1, status);
+				ps.setString(2, lc.getServerName());
+				ps.setString(3, uuid.toString());
+			}else {
+				ps = MySQL.getConnection().prepareStatement("UPDATE mc_users SET isOnline = ? WHERE mcuuid = ?");
+				ps.setBoolean(1, status);
+				ps.setString(2, uuid.toString());
+			}
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

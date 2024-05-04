@@ -80,6 +80,7 @@ public class LotusManager {
 		SyncServerdata.startScheduler();
 		new ScoreboardHandler().startScheduler(0, 50, 20);
 		ScoreboardHandler.initRoles();
+		InventorySetterHandling.loadServer();
 		
 		Main.luckPerms = (LuckPerms) Bukkit.getServer().getServicesManager().load(LuckPerms.class);
 		
