@@ -824,6 +824,18 @@ public class InventorySetterHandling implements Listener{
 				player.sendMessage(lc.getPrefix(Prefix.MAIN) + lc.sendMessageToFormat(player, "event.settings.chatbridge.enabled").replace("%setting%", "Announce Server Change"));
 			}
 			setDCB_GeneralSettingsInventory(player);
+		}else if(event.getView().getTitle().equalsIgnoreCase(profileSettings)) {
+			event.setCancelled(true);
+			LotusController lc = new LotusController();
+			String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
+			if(itemName.equalsIgnoreCase(language_title)) {
+				lc.sendMessageReady(player, "event.hotbar.open.language");
+				setLanguageInventory(player);
+			}else if(itemName.equalsIgnoreCase(profile_DCBBukkit)) {
+				setDCB_BukkitSettingsInventory(player);
+			}else if(itemName.equalsIgnoreCase(profile_DCBProxy)) {
+				setDCB_GeneralSettingsInventory(player);
+			}
 		}else {
 			LotusController lc = new LotusController();
 			String item = event.getCurrentItem().getItemMeta().getDisplayName();
@@ -876,6 +888,7 @@ public class InventorySetterHandling implements Listener{
 					}else if(itemName.equalsIgnoreCase(HotbarItem.hb_psettings)) {
 						event.setCancelled(true);
 						lc.sendMessageReady(player, "event.hotbar.open.settings");
+						setProfileSettingsInventory(player);
 					}else if(itemName.equalsIgnoreCase(HotbarItem.hb_language)) {
 						event.setCancelled(true);
 						lc.sendMessageReady(player, "event.hotbar.open.language");
