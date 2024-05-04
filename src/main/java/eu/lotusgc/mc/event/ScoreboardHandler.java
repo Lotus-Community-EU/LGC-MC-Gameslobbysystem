@@ -4,6 +4,8 @@ package eu.lotusgc.mc.event;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -68,10 +70,17 @@ public class ScoreboardHandler implements Listener{
 		}else {
 			o.setDisplayName(sbPrefix);
 			//playerinfo
-			o.getScore(lc.sendMessageToFormat(player, "event.scoreboard.userid")).setScore(0);
-			o.getScore("§7» §a" + lc.getPlayerData(player, Playerdata.LotusChangeID)).setScore(9);
-			o.getScore("§7Clan:").setScore(8);
-			o.getScore("§7» §a" + lc.getPlayerData(player, Playerdata.Clan)).setScore(7);
+			
+			String clan = lc.getPlayerData(player, Playerdata.Clan);
+			if(clan.equalsIgnoreCase("none")) {
+				o.getScore(lc.sendMessageToFormat(player, "event.scoreboard.userid")).setScore(8);
+				o.getScore("§7» §a" + lc.getPlayerData(player, Playerdata.LotusChangeID)).setScore(7);
+			}else {
+				o.getScore(lc.sendMessageToFormat(player, "event.scoreboard.userid")).setScore(10);
+				o.getScore("§7» §a" + lc.getPlayerData(player, Playerdata.LotusChangeID)).setScore(9);
+				o.getScore("§7Clan:").setScore(8);
+				o.getScore("§7» §a" + clan).setScore(7);
+			}
 			o.getScore("§4§b").setScore(6);
 			//role
 			o.getScore(lc.sendMessageToFormat(player, "event.scoreboard.role")).setScore(5);
@@ -83,6 +92,7 @@ public class ScoreboardHandler implements Listener{
 			o.getScore("§7» Bank: §e" + lc.getPlayerData(player, Playerdata.MoneyBank) + " §6Loti").setScore(0);
 		
 		}
+		
 		player.setScoreboard(sb);
 		
 		Team projlead = getTeam(sb, "projectlead", ChatColor.DARK_GRAY);
@@ -316,7 +326,8 @@ public class ScoreboardHandler implements Listener{
 			public void run() {
 				LotusController lc = new LotusController();
 				for(Player all : Bukkit.getOnlinePlayers()) {
-					all.setPlayerListHeaderFooter("§cLotus §aGaming §fCommunity", "§7Server: §a" + lc.getServerName() + "\n§7Time: §a00:00\n§7Ping: §a" + all.getPing());
+					SimpleDateFormat sdf = new SimpleDateFormat(lc.getPlayerData(all, Playerdata.CustomTimeFormat));
+					all.setPlayerListHeaderFooter("§cLotus §aGaming §fCommunity", "§7Server: §a" + lc.getServerName() + "\n§7Time: §a" + sdf.format(new Date()) + "\n§7Ping: §a" + all.getPing());
 				}
 			}
 		}.runTaskTimerAsynchronously(Main.main, delay, tabRefresh);
