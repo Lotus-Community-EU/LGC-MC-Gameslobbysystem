@@ -198,15 +198,15 @@ public class InventorySetterHandling implements Listener{
 		jbInv.setItem(6, lc.defItem(Material.ORANGE_STAINED_GLASS_PANE, "§c", 1));
 		jbInv.setItem(7, lc.defItem(Material.RED_STAINED_GLASS_PANE, "§c", 1));
 		jbInv.setItem(8, lc.defItem(Material.RED_STAINED_GLASS_PANE, "§c", 1));
-		jbInv.setItem(9, lc.potionItem(1, jboost_stage1, new PotionEffect(PotionEffectType.JUMP, 1200, 1))); //default
+		jbInv.setItem(9, lc.potionItem(1, jboost_stage1, new PotionEffect(PotionEffectType.JUMP_BOOST, 1200, 1))); //default
 		jbInv.setItem(10, lc.defItem(Material.LIME_STAINED_GLASS_PANE, "§c", 1));
-		jbInv.setItem(11, lc.potionItem(1, jboost_stage2, new PotionEffect(PotionEffectType.JUMP, 1200, 2))); //stage 1
+		jbInv.setItem(11, lc.potionItem(1, jboost_stage2, new PotionEffect(PotionEffectType.JUMP_BOOST, 1200, 2))); //stage 1
 		jbInv.setItem(12, lc.defItem(Material.YELLOW_STAINED_GLASS_PANE, "§c", 1));
-		jbInv.setItem(13, lc.potionItem(1, jboost_stage3, new PotionEffect(PotionEffectType.JUMP, 1200, 3))); //stage 2
+		jbInv.setItem(13, lc.potionItem(1, jboost_stage3, new PotionEffect(PotionEffectType.JUMP_BOOST, 1200, 3))); //stage 2
 		jbInv.setItem(14, lc.defItem(Material.ORANGE_STAINED_GLASS_PANE, "§c", 1));
-		jbInv.setItem(15, lc.potionItem(1, jboost_stage4, new PotionEffect(PotionEffectType.JUMP, 1200, 4))); //stage 3
+		jbInv.setItem(15, lc.potionItem(1, jboost_stage4, new PotionEffect(PotionEffectType.JUMP_BOOST, 1200, 4))); //stage 3
 		jbInv.setItem(16, lc.defItem(Material.RED_STAINED_GLASS_PANE, "§c", 1));
-		jbInv.setItem(17, lc.potionItem(1, jboost_stage5, new PotionEffect(PotionEffectType.JUMP, 1200, 5))); //stage 4
+		jbInv.setItem(17, lc.potionItem(1, jboost_stage5, new PotionEffect(PotionEffectType.JUMP_BOOST, 1200, 5))); //stage 4
 		jbInv.setItem(18, lc.defItem(Material.GREEN_STAINED_GLASS_PANE, "§c", 1));
 		jbInv.setItem(19, lc.defItem(Material.LIME_STAINED_GLASS_PANE, "§c", 1));
 		jbInv.setItem(20, lc.defItem(Material.LIME_STAINED_GLASS_PANE, "§c", 1));
@@ -228,92 +228,92 @@ public class InventorySetterHandling implements Listener{
 		}
 		HashMap<String, Boolean> map = EffectMoveEvent.playerEffects.get(player.getUniqueId());
 		if(map.get("hearts")) {
-			effectsInv.setItem(10, lc.enchantedItem(Material.RED_DYE, effect_hearts, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(10, lc.enchantedItem(Material.RED_DYE, effect_hearts, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(10, lc.defItem(Material.RED_DYE, effect_hearts, 1));
 		}
 		if(map.get("clouds")) {
-			effectsInv.setItem(11, lc.enchantedItem(Material.BONE_MEAL, effect_clouds, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(11, lc.enchantedItem(Material.BONE_MEAL, effect_clouds, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(11, lc.defItem(Material.BONE_MEAL, effect_clouds, 1));
 		}
 		if(map.get("music")) {
-			effectsInv.setItem(12, lc.enchantedItem(Material.NOTE_BLOCK, effect_music, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(12, lc.enchantedItem(Material.NOTE_BLOCK, effect_music, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(12, lc.defItem(Material.NOTE_BLOCK, effect_music, 1));
 		}
 		if(map.get("slime")) {
-			effectsInv.setItem(13, lc.enchantedItem(Material.SLIME_BALL, effect_slime, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(13, lc.enchantedItem(Material.SLIME_BALL, effect_slime, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(13, lc.defItem(Material.SLIME_BALL, effect_slime, 1));
 		}
 		if(map.get("water")) {
-			effectsInv.setItem(14, lc.enchantedItem(Material.WATER_BUCKET, effect_water, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(14, lc.enchantedItem(Material.WATER_BUCKET, effect_water, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(14, lc.defItem(Material.WATER_BUCKET, effect_water, 1));
 		}
 		if(map.get("ender")) {
-			effectsInv.setItem(15, lc.enchantedItem(Material.ENDER_EYE, effect_ender, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(15, lc.enchantedItem(Material.ENDER_EYE, effect_ender, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(15, lc.defItem(Material.ENDER_EYE, effect_ender, 1));
 		}
 		if(map.get("emerald")) {
-			effectsInv.setItem(16, lc.enchantedItem(Material.EMERALD, effect_emerald, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(16, lc.enchantedItem(Material.EMERALD, effect_emerald, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(16, lc.defItem(Material.EMERALD, effect_emerald, 1));
 		}
 		if(map.get("lava")) {
-			effectsInv.setItem(19, lc.enchantedItem(Material.LAVA_BUCKET, effect_lava, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(19, lc.enchantedItem(Material.LAVA_BUCKET, effect_lava, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(19, lc.defItem(Material.LAVA_BUCKET, effect_lava, 1));
 		}
 		if(map.get("honey")) {
-			effectsInv.setItem(20, lc.enchantedItem(Material.HONEY_BOTTLE, effect_honey, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(20, lc.enchantedItem(Material.HONEY_BOTTLE, effect_honey, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(20, lc.defItem(Material.HONEY_BOTTLE, effect_honey, 1));
 		}
 		if(map.get("redstone")) {
-			effectsInv.setItem(21, lc.enchantedItem(Material.REDSTONE, effect_color, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(21, lc.enchantedItem(Material.REDSTONE, effect_color, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(21, lc.defItem(Material.REDSTONE, effect_color, 1));
 		}
 		if(map.get("snow")) {
-			effectsInv.setItem(22, lc.enchantedItem(Material.SNOWBALL, effect_snow, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(22, lc.enchantedItem(Material.SNOWBALL, effect_snow, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(22, lc.defItem(Material.SNOWBALL, effect_snow, 1));
 		}
 		if(map.get("soulfire")) {
-			effectsInv.setItem(23, lc.enchantedItem(Material.SOUL_TORCH, effect_soul, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(23, lc.enchantedItem(Material.SOUL_TORCH, effect_soul, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(23, lc.defItem(Material.SOUL_TORCH, effect_soul, 1));
 		}
 		if(map.get("ash")) {
-			effectsInv.setItem(24, lc.enchantedItem(Material.BASALT, effect_ash, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(24, lc.enchantedItem(Material.BASALT, effect_ash, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(24, lc.defItem(Material.BASALT, effect_ash, 1));
 		}
 		if(map.get("souls")) {
-			effectsInv.setItem(25, lc.enchantedItem(Material.SOUL_SAND, effect_souls, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(25, lc.enchantedItem(Material.SOUL_SAND, effect_souls, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(25, lc.defItem(Material.SOUL_SAND, effect_souls, 1));
 		}
 		if(map.get("glow")) {
-			effectsInv.setItem(28, lc.enchantedItem(Material.GLOWSTONE, effect_glow, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(28, lc.enchantedItem(Material.GLOWSTONE, effect_glow, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(28, lc.defItem(Material.GLOWSTONE, effect_glow, 1));
 		}
 		if(map.get("endrod")) {
-			effectsInv.setItem(32, lc.enchantedItem(Material.END_ROD, effect_endrod, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(32, lc.enchantedItem(Material.END_ROD, effect_endrod, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(32, lc.defItem(Material.END_ROD, effect_endrod, 1));
 		}
 		if(map.get("cryobsidian")) {
-			effectsInv.setItem(34, lc.enchantedItem(Material.CRYING_OBSIDIAN, effect_cryobsidian, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(34, lc.enchantedItem(Material.CRYING_OBSIDIAN, effect_cryobsidian, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(34, lc.defItem(Material.CRYING_OBSIDIAN, effect_cryobsidian, 1));
 		}
 		if(map.get("cherry")) {
-			effectsInv.setItem(30, lc.enchantedItem(Material.CHERRY_LEAVES, effect_cherry, 1, Enchantment.DURABILITY, 1));
+			effectsInv.setItem(30, lc.enchantedItem(Material.CHERRY_LEAVES, effect_cherry, 1, Enchantment.EFFICIENCY, 1));
 		}else {
 			effectsInv.setItem(30, lc.defItem(Material.CHERRY_LEAVES, effect_cherry, 1));
 		}
@@ -491,19 +491,19 @@ public class InventorySetterHandling implements Listener{
 			if(event.getCurrentItem() == null && event.getCurrentItem().getItemMeta() == null) return;
 			String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
 			if(itemName.equalsIgnoreCase(jboost_stage1)) {
-				player.removePotionEffect(PotionEffectType.JUMP);
+				player.removePotionEffect(PotionEffectType.JUMP_BOOST);
 				player.sendMessage(lc.getPrefix(Prefix.MAIN) + lc.sendMessageToFormat(player, "event.extras.jumpboost.default"));
 			}else if(itemName.equalsIgnoreCase(jboost_stage2)) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 99999, 2));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 99999, 2));
 				player.sendMessage(lc.getPrefix(Prefix.MAIN) + lc.sendMessageToFormat(player, "event.extras.jumpboost.staged").replace("%stage%", "1"));
 			}else if(itemName.equalsIgnoreCase(jboost_stage3)) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 99999, 4));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 99999, 4));
 				player.sendMessage(lc.getPrefix(Prefix.MAIN) + lc.sendMessageToFormat(player, "event.extras.jumpboost.staged").replace("%stage%", "2"));
 			}else if(itemName.equalsIgnoreCase(jboost_stage4)) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 99999, 6));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 99999, 6));
 				player.sendMessage(lc.getPrefix(Prefix.MAIN) + lc.sendMessageToFormat(player, "event.extras.jumpboost.staged").replace("%stage%", "3"));
 			}else if(itemName.equalsIgnoreCase(jboost_stage5)) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 99999, 8));
+				player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 99999, 8));
 				player.sendMessage(lc.getPrefix(Prefix.MAIN) + lc.sendMessageToFormat(player, "event.extras.jumpboost.staged").replace("%stage%", "4"));
 			}else if(itemName.equalsIgnoreCase(back)) {
 				setExtrasInventory(player);
