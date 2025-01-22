@@ -1,11 +1,18 @@
-version: 1.0.0-ALPHA
-author: ChrisWille2856
+version: 1.1.0-ALPHA
+author: MauriceLPs
 name: LotusGamingSystem
 main: eu.lotusgc.mc.main.Main
-api-version: 1.20
+api-version: 1.21
 
 commands:
     build:
     spawn:
     spawn-admin:
-    
+    bankwithdraw:
+    bankdeposit:
+    topbal:
+        aliases: topbalance
+    pay:
+    money:
+    deleteserversign:
+        aliases: delss
