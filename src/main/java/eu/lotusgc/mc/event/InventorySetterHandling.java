@@ -838,6 +838,7 @@ public class InventorySetterHandling implements Listener{
 			}
 		}else {
 			LotusController lc = new LotusController();
+			if(event.getCurrentItem() == null) return;
 			String item = event.getCurrentItem().getItemMeta().getDisplayName();
 			String noMoveMsg = lc.getPrefix(Prefix.MAIN) + lc.sendMessageToFormat(player, "event.playerInventory.cancel").replace("%item%", item);
 			if(item.equalsIgnoreCase(HotbarItem.hb_extras) || item.equalsIgnoreCase(HotbarItem.hb_friends) || item.equalsIgnoreCase(HotbarItem.hb_psettings) ||
