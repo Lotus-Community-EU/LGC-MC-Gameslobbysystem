@@ -65,7 +65,8 @@ public class SpawnSystem implements CommandExecutor, Listener{
 					if(mode.equalsIgnoreCase("setspawn")) {
 						if(player.hasPermission("lgc.spawn.admin")) {
 							setSpawn(player.getLocation(), player, name);
-							lc.sendMessageReady(player, "cmd.spawnadmin.update");
+							//lc.sendMessageReady(player, "cmd.spawnadmin.update");
+							player.sendMessage(lc.getPrefix(Prefix.MAIN) + lc.sendMessageToFormat(player, "cmd.spawnadmin.update").replace("%spawnpoint%", name));
 						}else {
 							lc.noPerm(player, "lgc.spawn.admin");
 						}

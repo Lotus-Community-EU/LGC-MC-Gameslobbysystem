@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 
+import eu.lotusgc.mc.command.BankCommands;
 import eu.lotusgc.mc.command.BuildCMD;
 import eu.lotusgc.mc.command.SpawnSystem;
 import eu.lotusgc.mc.event.EffectMoveEvent;
@@ -14,6 +15,7 @@ import eu.lotusgc.mc.event.EventBlocker;
 import eu.lotusgc.mc.event.InventorySetterHandling;
 import eu.lotusgc.mc.event.JoinLeaveEvents;
 import eu.lotusgc.mc.event.ScoreboardHandler;
+import eu.lotusgc.mc.event.ServerSignHandler;
 import eu.lotusgc.mc.misc.LotusController;
 import eu.lotusgc.mc.misc.MySQL;
 import eu.lotusgc.mc.misc.SyncServerdata;
@@ -46,7 +48,7 @@ public class LotusManager {
 			MySQL.connect(cfg.getString("MySQL.Host"), cfg.getString("MySQL.Port"), cfg.getString("MySQL.Database"), cfg.getString("MySQL.Username"), cfg.getString("MySQL.Password"));
 		}
 		
-		Bukkit.getConsoleSender().sendMessage("§aInitialisation took §6" + (System.currentTimeMillis() - timestamp) + "§ams.");
+		Bukkit.getConsoleSender().sendMessage("§6Pre-§aInitialisation took §6" + (System.currentTimeMillis() - timestamp) + "§ams.");
 	}
 	
 	public void init() {
@@ -55,6 +57,12 @@ public class LotusManager {
 		Main.main.getCommand("build").setExecutor(new BuildCMD());
 		Main.main.getCommand("spawn").setExecutor(new SpawnSystem());
 		Main.main.getCommand("spawn-admin").setExecutor(new SpawnSystem());
+		Main.main.getCommand("bankwithdraw").setExecutor(new BankCommands());
+		Main.main.getCommand("bankdeposit").setExecutor(new BankCommands());
+		Main.main.getCommand("pay").setExecutor(new BankCommands());
+		Main.main.getCommand("topbal").setExecutor(new BankCommands());
+		Main.main.getCommand("money").setExecutor(new BankCommands());
+		Main.main.getCommand("deleteserversign").setExecutor(new ServerSignHandler());
 		
 		PluginManager pM = Bukkit.getPluginManager();
 		pM.registerEvents(new BuildCMD(), Main.main);
@@ -64,6 +72,7 @@ public class LotusManager {
 		pM.registerEvents(new JoinLeaveEvents(), Main.main);
 		pM.registerEvents(new EventBlocker(), Main.main);
 		pM.registerEvents(new InventorySetterHandling(), Main.main);
+		pM.registerEvents(new ServerSignHandler(), Main.main);
 		
 		Bukkit.getConsoleSender().sendMessage("§aInitialisation took §6" + (System.currentTimeMillis() - timestamp) + "§ams.");
 	}
@@ -81,10 +90,11 @@ public class LotusManager {
 		new ScoreboardHandler().startScheduler(0, 50, 20);
 		ScoreboardHandler.initRoles();
 		InventorySetterHandling.loadServer();
+		ServerSignHandler.startSignScheduler(0, 20);
 		
 		Main.luckPerms = (LuckPerms) Bukkit.getServer().getServicesManager().load(LuckPerms.class);
 		
-		Bukkit.getConsoleSender().sendMessage("§aInitialisation took §6" + (System.currentTimeMillis() - timestamp) + "§ams.");
+		Bukkit.getConsoleSender().sendMessage("§2Post-§aInitialisation took §6" + (System.currentTimeMillis() - timestamp) + "§ams.");
 	}
 
 }
