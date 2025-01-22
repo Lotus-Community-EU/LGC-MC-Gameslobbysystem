@@ -161,7 +161,7 @@ public class ServerSignHandler implements Listener, CommandExecutor{
 														sign.getSide(Side.FRONT).setLine(0, gs.getDisplayname());
 														sign.getSide(Side.FRONT).setLine(1, "§a" + gs.getCurrentPlayers() + " §7/ §c" + gs.getMaxSlots());
 														sign.getSide(Side.FRONT).setLine(2, "§d" + gs.getMinigame_Mapname());
-														sign.getSide(Side.FRONT).setLine(3, "§4Locked.");
+														sign.getSide(Side.FRONT).setLine(3, "§4Locked. \uD83D\uDD12");
 													}else {
 														if(gs.isMonitored()) {
 															sign.getSide(Side.FRONT).setLine(0, gs.getDisplayname());
@@ -191,7 +191,7 @@ public class ServerSignHandler implements Listener, CommandExecutor{
 													sign.getSide(Side.FRONT).setLine(0, gs.getDisplayname());
 													sign.getSide(Side.FRONT).setLine(1, "§a" + gs.getCurrentPlayers() + " §7/ §c" + gs.getMaxSlots());
 													sign.getSide(Side.FRONT).setLine(2, "");
-													sign.getSide(Side.FRONT).setLine(3, "§4Locked.");
+													sign.getSide(Side.FRONT).setLine(3, "§4Locked. \uD83D\uDD12");
 												}else {
 													if(gs.isMonitored()) {
 														sign.getSide(Side.FRONT).setLine(0, gs.getDisplayname());
