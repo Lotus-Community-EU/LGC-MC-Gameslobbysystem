@@ -9,6 +9,7 @@ import org.bukkit.plugin.PluginManager;
 
 import eu.lotusgc.mc.command.BankCommands;
 import eu.lotusgc.mc.command.BuildCMD;
+import eu.lotusgc.mc.command.LogCmd;
 import eu.lotusgc.mc.command.SpawnSystem;
 import eu.lotusgc.mc.event.EffectMoveEvent;
 import eu.lotusgc.mc.event.EventBlocker;
@@ -63,6 +64,8 @@ public class LotusManager {
 		Main.main.getCommand("topbal").setExecutor(new BankCommands());
 		Main.main.getCommand("money").setExecutor(new BankCommands());
 		Main.main.getCommand("deleteserversign").setExecutor(new ServerSignHandler());
+		Main.main.getCommand("login").setExecutor(new LogCmd());
+		Main.main.getCommand("logout").setExecutor(new LogCmd());
 		
 		PluginManager pM = Bukkit.getPluginManager();
 		pM.registerEvents(new BuildCMD(), Main.main);

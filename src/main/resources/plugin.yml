@@ -16,3 +16,5 @@ commands:
     money:
     deleteserversign:
         aliases: delss
+    login:
+    logout:
