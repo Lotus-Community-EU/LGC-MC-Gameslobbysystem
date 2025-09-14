@@ -61,6 +61,7 @@ public class ServerSignHandler implements Listener, CommandExecutor{
 		Action action = event.getAction();
 		Player player = event.getPlayer();
 		LotusController lc = new LotusController();
+		if(event.getClickedBlock() == null) return;
 		if(event.getClickedBlock().getState() instanceof Sign) {
 			if(action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {
 				if(delSign.contains(player.getUniqueId())) {
