@@ -2,6 +2,7 @@
 package eu.lotusgc.mc.event;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -21,6 +22,9 @@ public class JoinLeaveEvents implements Listener{
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		//updating the cache for the user lang
+		String lang = getPlayerLanguage(player.getUniqueId());
+		LotusController.playerLanguages.put(player.getUniqueId().toString(), lang);
 		event.setJoinMessage(null);
 		player.setGameMode(GameMode.SURVIVAL);
 		player.setHealth(20.0);
@@ -37,7 +41,6 @@ public class JoinLeaveEvents implements Listener{
 		updateOnlineStatus(event.getPlayer().getUniqueId(), false);
 	}
 
-	
 	private void updateOnlineStatus(UUID uuid, boolean status) {
 		try {
 			PreparedStatement ps;
@@ -56,5 +59,23 @@ public class JoinLeaveEvents implements Listener{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	//gets the player's language from db
+	private String getPlayerLanguage(UUID uuid) {
+		String lang = "en";
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT language FROM mc_users WHERE mcuuid = ?");
+			ps.setString(1, uuid.toString());
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				lang = rs.getString("language");
+			}
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lang;
 	}
 }
