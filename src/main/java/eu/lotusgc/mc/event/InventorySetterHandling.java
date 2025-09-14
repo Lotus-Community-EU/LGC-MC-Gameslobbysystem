@@ -1,5 +1,8 @@
 package eu.lotusgc.mc.event;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,6 +29,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import eu.lotusgc.mc.command.BuildCMD;
 import eu.lotusgc.mc.command.SpawnSystem;
+import eu.lotusgc.mc.main.Main;
 import eu.lotusgc.mc.misc.ChatbridgeEnums;
 import eu.lotusgc.mc.misc.ChatbridgeUtils;
 import eu.lotusgc.mc.misc.HotbarItem;
@@ -34,6 +38,8 @@ import eu.lotusgc.mc.misc.Money;
 import eu.lotusgc.mc.misc.MySQL;
 import eu.lotusgc.mc.misc.Playerdata;
 import eu.lotusgc.mc.misc.Prefix;
+import eu.lotusgc.mc.misc.util.GameServer;
+import eu.lotusgc.mc.misc.util.GameServer.Server;
 
 public class InventorySetterHandling implements Listener{
 	
@@ -49,7 +55,7 @@ public class InventorySetterHandling implements Listener{
 	static String navi_masterbuilders = "§bMaster§9Builders";
 	static String navi_gungames = "§8GunGames";
 	static String navi_endergames = "§dEndergames";
-	static String navi_comingsoon = "§ccoming soon"; //If a new game is planned being added, we will use this itemname.
+	static String navi_lobby = "§e§lLobby";
 	
 	public static String profileSettings = "§bProfile Settings";
 	public static String profile_DCBBukkit = "§bDCB Options §6Events";
@@ -115,22 +121,64 @@ public class InventorySetterHandling implements Listener{
 	static String close = "§cclose";
 	static String back = "§cback";
 	
+	//TODO: Lore text should show actual player count and server count.
 	public static void setNavigatorInventory(Player player) {
 		Inventory mainInventory = Bukkit.createInventory(null, 3*9, navi_title);
 		LotusController lc = new LotusController();
 		for(int i = 0; i < 27; i++) {
 			mainInventory.setItem(i, lc.defItem(Material.BLUE_STAINED_GLASS_PANE, "§c", 1));
 		}
-		mainInventory.setItem(0, lc.loreItem(Material.RED_BED, 1, navi_bedwars, "§7There are §a0 Players", "§7on §60 Servers §7playing", "§7this minigame."));
-		mainInventory.setItem(2, lc.loreItem(Material.IRON_HELMET, 1, navi_ffa, "§7There are §a0 Players", "§7on §60 Servers §7playing", "§7this minigame."));
+		List<GameServer> bwServers = getAllServersByGame("BedWars");
+		int bwPlayers = 0;
+		for(GameServer gs : bwServers) {
+			bwPlayers = bwPlayers + gs.getCurrentPlayers();
+		}
+		mainInventory.setItem(0, lc.loreItem(Material.RED_BED, 1, navi_bedwars, "§7There are §a" + bwPlayers + " Players", "§7on §6" + bwServers.size() + " Servers §7playing", "§7this minigame."));
+		List<GameServer> ffaServers = getAllServersByGame("FFA");
+		int ffaPlayers = 0;
+		for(GameServer gs : ffaServers) {
+			ffaPlayers += gs.getCurrentPlayers();
+			Main.logger.info("LOGGED " + gs.getBungeeKey() + " with " + gs.getCurrentPlayers() + " players.");
+		}
+		mainInventory.setItem(2, lc.loreItem(Material.IRON_HELMET, 1, navi_ffa, "§7There are §a" + ffaPlayers + " Players", "§7on §6" + ffaServers.size() + " Servers §7playing", "§7this minigame."));
 		mainInventory.setItem(4, lc.defItem(Material.DIAMOND, navi_spawn, 1));
-		mainInventory.setItem(6, lc.loreItem(Material.TOTEM_OF_UNDYING, 1, navi_monsterhunter, "§7There are §a0 Players", "§7on §60 Servers §7playing", "§7this minigame."));
-		mainInventory.setItem(8, lc.loreItem(Material.GOLDEN_AXE, 1, navi_1vs1, "§7There are §a0 Players", "§7on §60 Servers §7playing", "§7this minigame."));
-		mainInventory.setItem(18, lc.loreItem(Material.DIAMOND_SHOVEL, 1, navi_spleef, "§7There are §a0 Players", "§7on §60 Servers §7playing", "§7this minigame."));
-		mainInventory.setItem(20, lc.loreItem(Material.RED_GLAZED_TERRACOTTA, 1, navi_masterbuilders, "§7There are §a0 Players", "§7on §60 Servers §7playing", "§7this minigame."));
-		mainInventory.setItem(22, lc.defItem(Material.BEDROCK, navi_comingsoon, 1));
-		mainInventory.setItem(24, lc.loreItem(Material.IRON_SWORD, 1, navi_gungames, "§7There are §a0 Players", "§7on §60 Servers §7playing", "§7this minigame."));
-		mainInventory.setItem(26, lc.loreItem(Material.ENDER_PEARL, 1, navi_endergames, "§7There are §a0 Players", "§7on §60 Servers §7playing", "§7this minigame."));
+		List<GameServer> mhServers = getAllServersByGame("MonsterHunter");
+		int mhPlayers = 0;
+		for(GameServer gs : mhServers) {
+			mhPlayers = mhPlayers + gs.getCurrentPlayers();
+		}
+		mainInventory.setItem(6, lc.loreItem(Material.TOTEM_OF_UNDYING, 1, navi_monsterhunter, "§7There are §a" + mhPlayers + " Players", "§7on §6" + mhServers.size() + " Servers §7playing", "§7this minigame."));
+		List<GameServer> v1Servers = getAllServersByGame("1vs1");
+		int v1Players = 0;
+		for(GameServer gs : v1Servers) {
+			v1Players = v1Players + gs.getCurrentPlayers();
+		}
+		mainInventory.setItem(8, lc.loreItem(Material.GOLDEN_AXE, 1, navi_1vs1, "§7There are §a" + v1Players + " Players", "§7on §6" + v1Servers.size() + " Servers §7playing", "§7this minigame."));
+		List<GameServer> spleefServers = getAllServersByGame("Spleef");
+		int spleefPlayers = 0;
+		for(GameServer gs : spleefServers) {
+			spleefPlayers = spleefPlayers + gs.getCurrentPlayers();
+		}
+		mainInventory.setItem(18, lc.loreItem(Material.DIAMOND_SHOVEL, 1, navi_spleef, "§7There are §a" + spleefPlayers + " Players", "§7on §6" + spleefServers.size() + " Servers §7playing", "§7this minigame."));
+		List<GameServer> mbServers = getAllServersByGame("MasterBuilders");
+		int mbPlayers = 0;
+		for(GameServer gs : mbServers) {
+			mbPlayers = mbPlayers + gs.getCurrentPlayers();
+		}
+		mainInventory.setItem(20, lc.loreItem(Material.RED_GLAZED_TERRACOTTA, 1, navi_masterbuilders, "§7There are §a" + mbPlayers + " Players", "§7on §6" + mbServers.size() + " Servers §7playing", "§7this minigame."));
+		mainInventory.setItem(22, lc.defItem(Material.BARRIER, navi_lobby, 1));
+		List<GameServer> ggServers = getAllServersByGame("GunGames");
+		int ggPlayers = 0;
+		for(GameServer gs : ggServers) {
+			ggPlayers = ggPlayers + gs.getCurrentPlayers();
+		}
+		mainInventory.setItem(24, lc.loreItem(Material.IRON_SWORD, 1, navi_gungames, "§7There are §a" + ggPlayers + " Players", "§7on §6" + ggServers.size() + " Servers §7playing", "§7this minigame."));
+		List<GameServer> egServers = getAllServersByGame("Endergames");
+		int egPlayers = 0;
+		for(GameServer gs : egServers) {
+			egPlayers = egPlayers + gs.getCurrentPlayers();
+		}
+		mainInventory.setItem(26, lc.loreItem(Material.ENDER_PEARL, 1, navi_endergames, "§7There are §a" + egPlayers + " Players", "§7on §6" + egServers.size() + " Servers §7playing", "§7this minigame."));
 		player.openInventory(mainInventory);
 	}
 	
@@ -139,12 +187,13 @@ public class InventorySetterHandling implements Listener{
 		LotusController lc = new LotusController();
 		int slot = 0;
 		String playerLang = lc.getPlayerData(player, Playerdata.Language);
-		for(String string : lc.getAvailableLanguages()) {
-			String fancyName = langs.getOrDefault(string, "Error!");
-			if(string.equalsIgnoreCase(playerLang)) {
-				mainInventory.setItem(slot, lc.loreItem(Material.NETHER_STAR, 1, "§6" + fancyName, "§7Language is:", "§7» §a" + string));
+		for(Map.Entry<String, String> lang : LotusController.availableLanguages.entrySet()) {
+			String shortName = lang.getKey();
+			String fullName = lang.getValue();
+			if(shortName.equalsIgnoreCase(playerLang)) {
+				mainInventory.setItem(slot, lc.loreItem(Material.NETHER_STAR, 1, "§6" + fullName, "§7Language is:", "§7» §a" + fullName));
 			}else {
-				mainInventory.setItem(slot, lc.defItemRandom(matList(), "§a" + fancyName, 1, "§7Language is:", "§7» §a" + string));
+				mainInventory.setItem(slot, lc.defItemRandom(matList(), "§a" + fullName, 1, "§7Language is:", "§7» §a" + fullName));
 			}
 			slot++;
 		}
@@ -440,9 +489,8 @@ public class InventorySetterHandling implements Listener{
 				Location spawn = SpawnSystem.getSpawn("bedwars");
 				player.closeInventory();
 				player.teleport(spawn);
-			}else if(itemName.equalsIgnoreCase(navi_comingsoon)) {
-				//send out "This minigame is not released yet."
-				lc.sendMessageReady(player, "event.navi.comingsoon");
+			}else if(itemName.equalsIgnoreCase(navi_lobby)) {
+				sendPlayerToServer(player, itemName, "lobby", lc);
 			}else if(itemName.equalsIgnoreCase(navi_endergames)) {
 				Location spawn = SpawnSystem.getSpawn("endergames");
 				player.closeInventory();
@@ -838,7 +886,7 @@ public class InventorySetterHandling implements Listener{
 			}
 		}else {
 			LotusController lc = new LotusController();
-			if(event.getCurrentItem() == null) return;
+			if(event.getCurrentItem() == null && event.getCurrentItem().getItemMeta() == null) return;
 			String item = event.getCurrentItem().getItemMeta().getDisplayName();
 			String noMoveMsg = lc.getPrefix(Prefix.MAIN) + lc.sendMessageToFormat(player, "event.playerInventory.cancel").replace("%item%", item);
 			if(item.equalsIgnoreCase(HotbarItem.hb_extras) || item.equalsIgnoreCase(HotbarItem.hb_friends) || item.equalsIgnoreCase(HotbarItem.hb_psettings) ||
@@ -905,7 +953,6 @@ public class InventorySetterHandling implements Listener{
 	}
 	
 	private static HashMap<String, String> servers = new HashMap<>();
-	private static HashMap<String, String> langs = new HashMap<>();
 	
 	public static void loadServer() {
 		try {
@@ -917,24 +964,11 @@ public class InventorySetterHandling implements Listener{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		try {
-			LotusController lc = new LotusController();
-			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM core_translations WHERE path = ?");
-			ps.setString(1, "mcinternal.language");
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {
-				for(String string : lc.getAvailableLanguages()) {
-					langs.put(string, rs.getString(string));
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	private boolean findAndUpdatePlayerLanguage(Player player, String newLanguage) {
 		boolean success = false;
-		if(langs.containsKey(newLanguage)) {
+		if(LotusController.availableLanguages.containsKey(newLanguage)) {
 			LotusController.playerLanguages.put(player.getUniqueId().toString(), newLanguage);
 			try {
 				PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE mc_users SET language = ? WHERE mcuuid = ?");
@@ -1012,5 +1046,40 @@ public class InventorySetterHandling implements Listener{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	static List<GameServer> getAllServersByGame(String gameName){
+		List<GameServer> list = new ArrayList<>();
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT bungeeKey,isOnline FROM mc_serverstats WHERE minigameType = ?");
+			ps.setString(1, gameName);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				if(rs.getBoolean("isOnline")){
+					GameServer gs = new GameServer(rs.getString("bungeeKey"), Server.Key);
+					list.add(gs);
+				}
+			}
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	private void sendPlayerToServer(Player player, String fancyName, String destinationServer, LotusController lc) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(baos);
+		try {
+			dos.writeUTF("Connect");
+			dos.writeUTF(destinationServer);
+			player.sendMessage(lc.getPrefix(Prefix.MAIN) + lc.sendMessageToFormat(player, "event.navigator.sendPlayer.success"));
+			Main.logger.info(player.getName() + " has been sent to " + destinationServer + " successfully.");
+		} catch (IOException e) {
+			Main.logger.severe(player.getName() + " attempted to be sent to " + destinationServer + " but failed!");
+			e.printStackTrace();
+		}
+		player.sendPluginMessage(Main.main, "BungeeCord", baos.toByteArray());
 	}
 }
