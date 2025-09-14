@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +38,7 @@ public class LotusController {
 	//Language System
 	private static HashMap<String, HashMap<String, String>> langMap = new HashMap<>();
 	public static HashMap<String, String> playerLanguages = new HashMap<>();
-	private static List<String> availableLanguages = new ArrayList<>();
+	public static HashMap<String, String> availableLanguages = new HashMap<>();
 	
 	//Prefix System
 	private static HashMap<String, String> prefix = new HashMap<>();
@@ -51,56 +50,39 @@ public class LotusController {
 	
 	// < - - - END OF INSTANCES - - - >
 	
-	/* Server reads out how many columns there are for the language system. 
-	 * For each entry (except the key value and optionings) a HashMap<String, String> will be created within a HashMap<String, HashMap<String, String>>
-	 * Also it will "download" all keys and their respective value to have less methods for the init.
-	 * IF the map keeps empty due to an unknown reason, then the path will be given out.
-	 */
 	public boolean initLanguageSystem() {
 		try {
-			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM core_translations");
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM core_languages");
 			ResultSet rs = ps.executeQuery();
-			ResultSetMetaData rsmd =  rs.getMetaData();
-			int columnCount = rsmd.getColumnCount();
-			int languageStrings = 0;
-			int colToStartFrom = 0;
-			if(rs.next()) {
-				for(int i = 1; i <= columnCount; i++) {
-					String name = rsmd.getColumnName(i);
-					if(name.equals("German")) {
-						colToStartFrom = i;
-						break;
-					}
-				}
-				HashMap<String, String> map;
-				for(int i = colToStartFrom; i <= columnCount; i++) {
-					String name = rsmd.getColumnName(i);
-					availableLanguages.add(name);
-					Main.logger.info("Logged language " + name + " to List");
-					PreparedStatement ps1 = MySQL.getConnection().prepareStatement("SELECT path," + name + ",isGame FROM core_translations");
-					ResultSet rs1 = ps1.executeQuery();
-					map = new HashMap<>();
-					int subLangStrings = 0;
-					while(rs1.next()) {
-						if(rs1.getBoolean("isGame")) {
-							subLangStrings++;
-							//Only get Strings, which are for the game (what would we do with website/bot string, right?)
-							map.put(rs1.getString("path"), rs1.getString(name));
-						}
-					}
-					languageStrings = subLangStrings;
-					langMap.put(name, map);
-				}
-				Main.logger.info("langMap logged " + langMap.size() + " entries with each " + languageStrings + " entries per language.");
+			while(rs.next()){
+				int langId = rs.getInt("LanguageId");
+                String shortName = rs.getString("ShortName");
+				String langName = rs.getString("FullName");
+				String langCode = rs.getString("LanguageCode");
+				availableLanguages.put(shortName, langName);
+				Main.logger.info("Found Language: " + langName + " (" + langCode + " / " + shortName + ") with ID " + langId);
+                try (PreparedStatement ps1 = MySQL.getConnection().prepareStatement("SELECT k.TranslationKey, t.TranslationValue FROM core_translations t JOIN core_translation_keys k ON k.TranslationKeyId = t.TranslationKeyId WHERE k.isGame = 1 AND LanguageId = ?")) {
+                    ps1.setInt(1, langId);
+                    ResultSet translations = ps1.executeQuery();
+
+                    HashMap<String, String> translationsByLanguage = new HashMap<>();
+                    while (translations.next()) {
+                        String key = translations.getString("TranslationKey");
+                        String value = translations.getString("TranslationValue");
+                        translationsByLanguage.put(key, value);
+                    }
+
+                    langMap.put(shortName, translationsByLanguage);
+                    translations.close();
+                }
 			}
+			rs.close();
+			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return langMap.isEmpty();
-	}
-	
-	public List<String> getAvailableLanguages() {
-		return availableLanguages;
+
+		return false;
 	}
 	
 	public boolean initPlayerLanguages() {
@@ -166,6 +148,7 @@ public class LotusController {
 				return "The path '" + path + "' does not exist!";
 			}
 		}else {
+            Main.logger.warning("Language '" + language + "' does not exist. Falling back to English.");
 			return "The language '" + language + "' does not exist!";
 		}
 	}
