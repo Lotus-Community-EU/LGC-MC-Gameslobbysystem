@@ -33,6 +33,7 @@ import eu.lotusgc.mc.misc.LotusController;
 import eu.lotusgc.mc.misc.MySQL;
 import eu.lotusgc.mc.misc.Playerdata;
 import eu.lotusgc.mc.misc.Prefix;
+import eu.lotusgc.mc.misc.util.LotusPlayer;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;
 
@@ -95,111 +96,164 @@ public class ScoreboardHandler implements Listener{
 		
 		player.setScoreboard(sb);
 		
-		Team projlead = getTeam(sb, "projectlead", ChatColor.DARK_GRAY);
-		Team viceProjLead = getTeam(sb, "viceprojlead", ChatColor.DARK_GRAY);
-		Team staffmanager = getTeam(sb, "staffmanager", ChatColor.DARK_GRAY);
-		Team staffsupervisor = getTeam(sb, "staffsupervisor", ChatColor.DARK_GRAY);
-		Team developer = getTeam(sb, "developer", ChatColor.DARK_GRAY);
-		Team headofcommunity = getTeam(sb, "headofcommunity", ChatColor.DARK_GRAY);
+		Team projlead = getTeam(sb, "projectleader", ChatColor.DARK_GRAY);
+		Team viceProjLead = getTeam(sb, "viceprojleader", ChatColor.DARK_GRAY);
 		Team humanresources = getTeam(sb, "humanresources", ChatColor.DARK_GRAY);
-		Team qualityassman = getTeam(sb, "qualityassman", ChatColor.DARK_GRAY);
+		Team staffmanager = getTeam(sb, "staffmanager", ChatColor.DARK_GRAY);
+		Team devmgr = getTeam(sb, "devmgr", ChatColor.DARK_GRAY);
+		Team qamanager = getTeam(sb, "qamanager", ChatColor.DARK_GRAY);
+		Team lfmmanager = getTeam(sb, "lfmmanager", ChatColor.DARK_GRAY);
+		Team aprsman = getTeam(sb, "aprsman", ChatColor.DARK_GRAY);
+		Team sdanalyst = getTeam(sb, "sdanalyst", ChatColor.DARK_GRAY);
+		Team staffsupervisor = getTeam(sb, "staffsupervisor", ChatColor.DARK_GRAY);
+		Team developer = getTeam(sb, "developer", ChatColor.GRAY);
+		Team addon = getTeam(sb, "addon", ChatColor.GRAY);
 		Team admin = getTeam(sb, "admin", ChatColor.GRAY);
-		Team builder = getTeam(sb, "builder", ChatColor.GRAY);
-		Team designer = getTeam(sb, "designer", ChatColor.GRAY);
 		Team moderator = getTeam(sb, "moderator", ChatColor.GRAY);
+		Team lfmlpresenter = getTeam(sb, "lfmlpresenter", ChatColor.GRAY);
+		Team lfmdj = getTeam(sb, "lfmdj", ChatColor.GRAY);
+		Team lfmplcurator = getTeam(sb, "lfmplcurator", ChatColor.GRAY);
+		Team lfmredactor = getTeam(sb, "lfmredactor", ChatColor.GRAY);
+		Team socialmedia = getTeam(sb, "socialmedia", ChatColor.GRAY);
 		Team support = getTeam(sb, "support", ChatColor.GRAY);
 		Team translator = getTeam(sb, "translator", ChatColor.GRAY);
-		Team addon = getTeam(sb, "addon", ChatColor.GRAY);
+		Team designer = getTeam(sb, "designer", ChatColor.GRAY);
+		Team builder = getTeam(sb, "builder", ChatColor.GRAY);
+		Team event = getTeam(sb, "event", ChatColor.GRAY);
 		Team retired = getTeam(sb, "retired", ChatColor.WHITE);
 		Team beta = getTeam(sb, "beta", ChatColor.WHITE);
 		Team userg = getTeam(sb, "default", ChatColor.WHITE);
 		
-		for(Player all : Bukkit.getOnlinePlayers()) {
-			//Lotus Internal
-			String nick = lc.getPlayerData(all, Playerdata.Nick);
-			String clan = lc.getPlayerData(all, Playerdata.Clan);
-			String id = lc.getPlayerData(all, Playerdata.LotusChangeID);
-			if(nick.equalsIgnoreCase("none")) {
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			// Lotus Internal
+			LotusPlayer lp1 = new LotusPlayer(all);
+			String nick = lp1.getNick();
+			String clan = lp1.getClan();
+			int id = lp1.getLGCId();
+			boolean logStatus = lp1.isLoggedIn();
+			if (nick.equalsIgnoreCase("none")) {
 				all.setCustomName(all.getName());
-			}else {
+			} else {
 				all.setCustomName(nick);
 			}
-			if(clan.equalsIgnoreCase("none")) {
+			if (clan.equalsIgnoreCase("none")) {
 				clan = "";
 			}
-			
-			//LuckPerms
+
+			// LuckPerms
 			UserManager um = Main.luckPerms.getUserManager();
 			User user = um.getUser(all.getName());
-			
-			if(user.getPrimaryGroup().equalsIgnoreCase("projectlead")) {
-				projlead.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("viceprojectleader")) {
-				viceProjLead.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("staffmanager")) {
-				staffmanager.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("staffsupervisor")) {
-				staffsupervisor.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("developer")) {
-				developer.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("headofcommunity")) {
-				headofcommunity.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("humanresources")) {
-				humanresources.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("qualityassman")) {
-				qualityassman.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("admin")) {
-				admin.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("builder")) {
-				builder.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("designer")) {
-				designer.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("moderator")) {
-				moderator.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("support")) {
-				support.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("translator")) {
-				translator.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("addon")) {
-				addon.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("retired")) {
-				retired.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
-			}else if(user.getPrimaryGroup().equalsIgnoreCase("beta")) {
-				beta.addEntry(all.getName());
-				all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
-				all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+
+			if (logStatus) {
+				if (user.getPrimaryGroup().equalsIgnoreCase("projectleader")) {
+					projlead.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("viceprojectleader")) {
+					viceProjLead.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("humanresources")) {
+					humanresources.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("staffmanager")) {
+					staffmanager.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("devmgr")) {
+					devmgr.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("qamanager")) {
+					qamanager.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("lfmmanager")) {
+					lfmmanager.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("aprsmanager")) {
+					aprsman.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("sdanalyst")) {
+					sdanalyst.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				}else if (user.getPrimaryGroup().equalsIgnoreCase("staffsupervisor")) {
+					staffsupervisor.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("developer")) {
+					developer.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("addon")) {
+					addon.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				}else if (user.getPrimaryGroup().equalsIgnoreCase("admin")) {
+					admin.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("moderator")) {
+					moderator.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("lfmlpresenter")) {
+					lfmlpresenter.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("lfmdj")) {
+					lfmdj.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("lfmplcurator")) {
+					lfmplcurator.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("lfmredactor")) {
+					lfmredactor.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("socialmedia")) {
+					socialmedia.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("support")) {
+					support.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("translator")) {
+					translator.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("designer")) {
+					designer.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("builder")) {
+					builder.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("event")) {
+					event.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("retired")) {
+					retired.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else if (user.getPrimaryGroup().equalsIgnoreCase("beta")) {
+					beta.addEntry(all.getName());
+					all.setDisplayName(returnPrefix(user.getPrimaryGroup(), RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix(user.getPrimaryGroup(), RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				} else {
+					userg.addEntry(all.getName());
+					all.setDisplayName(returnPrefix("default", RankType.CHAT) + all.getCustomName());
+					all.setPlayerListName(returnPrefix("default", RankType.TAB) + all.getCustomName() + " §7(§a" + id + "§7) §f" + clan);
+				}
 			}else {
 				userg.addEntry(all.getName());
 				all.setDisplayName(returnPrefix("default", RankType.CHAT) + all.getCustomName());
@@ -233,7 +287,7 @@ public class ScoreboardHandler implements Listener{
 	}
 	
 	public Team getTeam(Scoreboard scoreboard, String role, ChatColor chatcolor) {
-		Team team = scoreboard.registerNewTeam(returnPrefix(role, RankType.TEAM));
+		Team team = scoreboard.registerNewTeam("A00" + returnPrefix(role, RankType.TEAM));
 		team.setPrefix(returnPrefix(role, RankType.TAB));
 		team.setColor(chatcolor);
 		team.setOption(Option.COLLISION_RULE, OptionStatus.NEVER); //TBD for removal if issues arise.
